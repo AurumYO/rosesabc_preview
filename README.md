@@ -20,9 +20,9 @@ A digital Encyclopedia of roses. Here gathered all information on rose varieties
 
 ## Screenshots
 
-![Home page from a Desktop](screenshots/prototype_site_1.png)
-![User page with list of all downloaded photos, from a Desktop](screenshots/prototype_site_2.png)
-![New User registration form, Mobile view](screenshots/prototype_site_3.png)
+![Home page from a Desktop](screenshoots/prototype_site_1.png)
+![User page with list of all downloaded photos, from a Desktop](screenshoots/prototype_site_2.png)
+![New User registration form, Mobile view](screenshoots/prototype_site_3.png)
 
 ## Installation
 
