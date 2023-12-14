@@ -1,0 +1,11 @@
+db.sqlite3
+__pycache__
+env
+rosesabc/Include/
+rosesabc/Lib/
+rosesabc/.env
+rosesabc/Scripts/
+rosesabc/pyenv.cfg
+cert.crt
+cert.key
+media/
