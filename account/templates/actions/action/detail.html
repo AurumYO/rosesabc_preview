@@ -1,0 +1,56 @@
+{% load thumbnail %}
+{% load static %}
+{% load i18n %}
+
+{% with user=action.user profile=action.user.profile %}
+<div class="user-action flex flex-col">
+  <div class="flex flex-row">
+    {% if profile.photo %}
+      {% thumbnail user.profile.photo "40x40" crop="100%" as im %}
+      <a href="{{ user.get_absolute_url }}">
+        <div class="action-images flex flex-row">
+          <img src="{{ im.url }}" alt="{{ user.get_full_name }}" class="item-img">
+          {{ user.username }},
+        </div>       
+      </a>
+    {% else %}
+    <a href="{{ user.get_absolute_url }}">
+      <div class="action-images flex flex-row">
+        <img src="{% static 'images/default_user.png' %}" alt="{{ user.get_full_name }}" style="max-width: 40px; max-height: 40px;" class="item-img">
+        {{ user.username }}, 
+      </div>       
+    </a>
+    {% endif %}
+
+    {% if action.target %}
+      {% with target=action.target %}
+        {% if target.image %}
+          {% thumbnail target.image "40x40" crop="100%" as im %}
+          <a href="{{ target.get_absolute_url }}">
+            <img src="{{ im.url }}" class="item-img">
+          </a>
+        {% else %}
+          <a href="{{ target.get_absolute_url }}">
+            <img src="{% static 'images/default_user.png' %}" style="max-width: 40px; max-height: 40px;" class="item-img">
+          </a>
+        {% endif %}
+      {% endwith %}
+    {% endif %}
+  </div>
+  <div class="action-info">
+    <p>
+      <span class="date">{{ action.created|timesince }} {% trans "ago" %}</span>
+      <br />
+      <a class="action-info-target" href="{{ user.get_absolute_url }}">
+        {{ user.first_name }}
+      </a>
+      {{ action.verb }}
+      {% if action.target %}
+        {% with target=action.target %}
+          <a class="action-info-target" href="{{ target.get_absolute_url }}">{{ target }}</a>
+        {% endwith %}
+      {% endif %}
+    </p>
+  </div>
+</div>
+{% endwith %}

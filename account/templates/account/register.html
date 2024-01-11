@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% load static %}
+
+{% block title %}{% trans "Sign Up Page" %}{% endblock %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+
+   <div class="container-login flex flex-col text-center"> 
+        <h1>{% trans "Sign Up" %}</h1>
+        
+
+        <div class="login-box ">
+
+        <div class="user-icon">
+            <i class="fa-solid fa-user"></i>
+        </div>
+
+        <form class="login" action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group flex flex-col">
+                {{ form.non_field_errors }}
+            </div>
+            <div class="form-group flex flex-col">
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <strong class="text-center text-xl">{{ error|escape }}</strong>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group flex flex-col">
+                <label for="id_username">{% trans "Username" %}</label>
+                <p class="form-control">
+                    <input type="text" name="username" maxlength="150" required="" id="id_username">
+                    <span class="helptext">{% trans "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only." %}</span>
+                </p>
+            </div>
+            <div class="form-group flex flex-col">
+                <label for="id_first_name">{% trans "First Name" %}</label>
+                <p class="form-control">
+                    <input type="text" name="first_name" maxlength="150" id="id_first_name">
+                </p>
+            </div>
+            <div class="form-group flex flex-col">
+                <label for="id_email">{% trans "Email" %}</label>
+                <p class="form-control">
+                    <input type="email" name="email" maxlength="254" id="id_email">
+                </p>
+            </div>
+            <div class="form-group flex flex-col">
+                <label for="id_password">{% trans "Password" %}</label>
+                <p class="form-control">
+                    <input type="password" name="password" required="" id="id_password">
+                </p>
+            </div>
+            <div class="form-group flex flex-col">
+                <label for="id_password2">{% trans "Repeat Password" %}</label>
+                <p class="form-control">
+                    <input type="password" name="password2" required="" id="id_password2">
+                </p>
+            <div class="confirm-terms-services">
+                <input type="checkbox" class="agree-terms-and-services" name="check_agree_terms_and_services" required="" id="id_check_agree_terms_and_services">
+                <label for="id_check_agree_terms_and_services">
+                    <p class="text-confirm">{% trans "I agree with the " %}<a href="{% url 'library:terms-and-conditions' %}">{% trans "Terms and Conditions" %}</a>{% trans " and the " %}
+                    <a href="{% url 'library:privacy-and-security' %}">{% trans "Privacy & Security." %}</a></p>
+                </label>
+            </div>
+            </div>
+            <div class="form-group flex flex-col text-center">
+            <button type="submit" class="btn">{% trans 'Create account' %}</button> 
+            </div>
+        </form>
+
+        <div class="separator">
+            {% trans "Or sign un with" %}
+        </div>
+
+        <div class="social-login">
+            <ul>
+            <li class="google">
+                <a href="{% url 'social:begin' 'google-oauth2' %}">
+                <i class="fa-brands fa-google"></i>{% trans "Login with" %} Google</a>
+            </li>
+            <li class="facebook">
+                <a href="{% url 'social:begin' 'facebook' %}">
+                <i class="fa-brands fa-facebook"></i>{% trans "Login with" %} Facebook</a>
+            </li>
+            </ul>
+        </div>
+       
+
+
+</div>
+{% endblock content %}

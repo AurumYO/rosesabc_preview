@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% load rose_tags %}
+{% load i18n %}
+
+
+{% block title %}{% trans "People Around" %}{% endblock title %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-info flex">
+  {% if request.user.is_authenticated %}
+
+  <div class="side-left flex flex-col flex-center">
+    {% include "account/user/user_links.html" %}
+  </div>
+
+  <div class="main-content flex flex-col">
+
+    <h1 class="heding-font text-center"> {% trans "People Around" %}</h1>
+
+    <div class="people-list flex flex-row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+        {% for user in users %}
+        <div class="col mb-3">
+          <div class="user-card">
+            <img class="user-img card-img-top">
+            <div class="card-body text-center">
+                {% if user.profile.photo %}
+                <img src="{{ user.profile.photo.url }}" style="width:100px;margin-top:-65px" alt="User" 
+                class="user-img img-thumbnail rounded-circle border-0 mb-3">
+                {% else %}
+                <img src="{% static "images/default_user.png" %}" style="width:100px;margin-top:-65px" alt="User" 
+                class="user-img img-thumbnail rounded-circle border-0 mb-3">
+                {% endif %}
+              <h5 class="card-title">{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}</h5>
+              <p class="text-secondary mb-1">{{ user.profile.about_me|markdown|truncatewords_html:10 }}</p>
+              <div class="user-card-footer flex flex-row ">
+                <form method="POST" action="{{ user.get_absolute_url }}">
+                  {% csrf_token %}
+                  <button class="btn" type=submit>{% trans "Profile" %}</button>
+                </form>
+                {% if request.user in user.followers.all %}
+                  <form method="POST" action="{% url 'user_unfollow' user_id=user.id %}">
+                      {% csrf_token %}
+                      <button class="btn" type=submit>{% trans "Unfollow" %}</button>
+                  </form>
+                {% else %}
+                  <form method="POST" action="{% url 'user_follow' user_id=user.id %}">
+                      {% csrf_token %}
+                      <button class="btn" type=submit>{% trans "Follow" %}</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+            <a >
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% include "pagination.html" with page=users %}
+
+  </div>
+
+
+  <div class="side-right flex flex-col flex-center">
+
+    <h2 class="side-right-header text-center">{% trans "What's new?" %}</h2>
+    <div id="action-list flex flex-col">
+      {% for action in actions %}
+        {% include "actions/action/detail.html" %}
+      {% endfor %}
+    </div>
+
+  </div>
+
+  {% endif %}
+
+</div>   
+{% endblock content %}

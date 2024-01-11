@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% load static %}
+
+{% block title %}{% trans "Welcome Page" %}{% endblock %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+<div class="user-action-container flex">
+
+    <div class="side-cover">
+        <div class="side-image"></div>
+    </div>
+
+    <div class="user-info flex flex-col flex-center">
+
+        <div class="user-info-text text-center">
+            <h1 class="text-lg p-4">{% trans "Welcome" %} {{ new_user.username }}</h1>
+            <p>{% trans "Your password has been set" %}.</p>
+            <p> {% trans "Your account has been sucessfully created. Now you can" %}
+                <a class="user-link" href="{% url 'login' %}">{% trans " log in now" %}</a></p>
+        </div>
+
+    </div>  
+    
+</div>
+
+{% endblock content %}

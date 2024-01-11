@@ -1,0 +1,37 @@
+{% load thumbnail %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="side-left-header">
+    <h3>{% trans "Quick links" %}</p>
+</div>
+  
+  
+<div class="quick-links">
+    <ul class="menu-side">
+      <li {% if section == 'dashboard' %} class="selected" {% endif %}>
+        <a href="{% url 'dashboard' %}">{% trans "My dashboard" %}</a>
+      </li>
+      <li {% if section == "photos" %} class="selected" {% endif %}>
+        <a href="{% url 'photos_posted' %}">{% trans "My Photos" %}</a>
+      </li>
+      <li {% if section == "videos" %} class="selected" {% endif %}>
+        <a href="{% url 'user_videos' %}">{% trans "My Videos" %}</a>
+      </li>
+      <li {% if section == "articles" %} class="selected" {% endif %}>
+        <a href="{% url 'articles_posted' %}">{% trans "My Articles" %}</a>
+      </li>
+      <li {% if section == "roses_liked" %} class="selected" {% endif %}>
+        <a href="{% url 'roses_liked' %}">{% trans "Roses Liked" %}</a>
+      </li>
+      <li {% if section == "people" %} class="selected" {% endif %}>
+        <a href="{% url 'user_list' %}">{% trans "People around" %}</a>
+      </li>
+      <li>
+        <a href="{% url 'delete_page' %}">{% trans "Delete My Account" %}</a>
+      </li>
+    </ul>
+</div>
+
+{% endblock content %}

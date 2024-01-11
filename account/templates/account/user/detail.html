@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "User's Profile Page" %}{% endblock %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-info flex">
+  {% if request.user.is_authenticated %}
+  <div class="side-left flex flex-col flex-center">
+    
+    {% include "account/user/user_links.html" %}
+    
+  </div>
+
+  <div class="main-content flex flex-col">
+
+    <div class="profile">
+      <div class="profile-row flex">
+
+        <div class="col-md-4 flex-grow">
+          <div class="about-avatar">
+            {% if user.profile.photo %}
+            <img class="flex-shrink-0" src="{{ user.profile.photo.url }}" alt="{{ user.username }}" class="profile-img">
+            {% else %}
+            <img class="flex-shrink-0" src="{% static 'images/library.webp' %}" alt="{{ user.username }}" class="profile-img">
+            {% endif %}
+          </div>
+
+          <div class="followers-container flex flex-row flex-gap-1">
+
+            {% with total_followers=user.followers.count %}
+              <span class="count">
+                {% blocktrans count followers=total_followers %}
+                    {{ followers }} follower,
+                  {% plural %}
+                    {{ followers }} followers,
+                {% endblocktrans %}
+              </span>
+              {% if request.user in user.followers.all %}
+                <form method="POST" action="{% url 'user_unfollow' user_id=user.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger" type=submit>{% trans "Unfollow" %}</button>
+                </form>
+              {% else %}
+                <form method="POST" action="{% url 'user_follow' user_id=user.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-success" type=submit>{% trans "Follow" %}</button>
+                </form>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+
+        <div class="col-lg-6 ">
+
+          <div class="about-text go-to">
+            <h3 class="dark-color text-center">{{ user.get_full_name }}</h3>
+            <p class="text-center">
+              {% if user.profile.about_me %}
+                {{ user.profile.about_me }}
+              {% else %}
+                {% trans "About me ...                                                                                    " %}
+              {% endif %}
+            </p>
+            <div class="about-list">
+              <div class="">
+                <div class="media flex flex-row">
+                  <label>{% trans "User Name" %}</label>
+                  <p>{{ user.username }}</p>
+                </div>
+                <div class="media flex flex-row">
+                  <label>{% trans "Birthday" %}</label>
+                  <p>{{ user.profile.date_of_birth }}</p>
+                </div>
+                <div class="media flex flex-row">
+                  <label>{% trans "Region" %}</label>
+                    <p>{{ user.profile.region }}</p>
+                </div>
+         
+                <div class="media flex flex-row">
+                  <label>{% trans "First Name" %}</label>
+                  <p>{{ user.first_name }}</p>
+                </div>
+                <div class="media flex flex-row">
+                  <label>{% trans "Last Name" %}</label>
+                  <p>{{ user.last_name }}</p>
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        </div>
+
+      </div>
+      <div class="counter">
+        <div class="row">
+          <div class="col-6 col-lg-3">
+            <div class="count-data text-center">
+              <h6 class="count h2">{{ images_added }}</h6>
+              <p class="m-0px font-w-600">{% trans "Images added" %}</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="count-data text-center">
+              <h6 class="count h2">{{ rose_added }}</h6>
+              <p class="m-0px font-w-600">{% trans "Rose Varieties Added" %}</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="count-data text-center">
+              <h6 class="count h2">{{ articles_added }}</h6>
+              <p class="m-0px font-w-600">{% trans "Articles Written" %}</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="count-data text-center">
+              <h6 class="count h2">{{ liked_roses }}</h6>
+              <p class="m-0px font-w-600">{% trans "Roses Liked" %}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+
+  <div class="side-right flex flex-col flex-center">
+
+    <h2 class="side-right-header text-center">{% trans "What's new?" %}</h2>
+    <div id="action-list flex flex-col">
+      {% for action in actions %}
+        {% include "actions/action/detail.html" %}
+      {% endfor %}
+    </div>
+
+  </div>
+
+  {% endif %}
+</div>  
+
+{% endblock %}

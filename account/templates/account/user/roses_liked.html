@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load rose_tags %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Favorite Roses" %}{% endblock title %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+
+{% block content %}
+
+<div class="profile-info flex">
+  {% if request.user.is_authenticated %}
+
+  <div class="side-left flex flex-col flex-center">
+    {% include "account/user/user_links.html" %}
+  </div>
+
+  <div class="main-content flex flex-col">
+
+    <h1 class="text-center p-2"> {% trans "Liked Roses" %}</h1>
+
+    <div class="roses-list-container">
+      {% for rose in roses %}
+        <div class="rose-item">
+          <img src="{{ rose.get_main_picture.picture.url }}"  class="card-img-top" alt="{{ rose.get_english_name }} {{ rose.name }}">
+          <div class="photo-box-header">
+            <h2 class="text-center mb-3"><a href="{{ rose.get_absolute_url }}">
+              {% if LANGUAGE_CODE == 'uk' %}
+                {{ rose.get_english_name }} ({{ rose.name }})
+              {% else %}
+                {{ rose.name }}
+              {% endif %}</a></h2>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% include "pagination.html" with page=roses %}
+
+  </div>
+
+
+  <div class="side-right flex flex-col flex-center">
+
+    <h2 class="side-right-header text-center">{% trans "What's new?" %}</h2>
+    <div id="action-list flex flex-col">
+      {% for action in actions %}
+        {% include "actions/action/detail.html" %}
+      {% endfor %}
+    </div>
+
+  </div>
+
+  {% endif %}
+
+</div>   
+{% endblock content %}

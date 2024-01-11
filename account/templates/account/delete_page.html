@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% load static %}
+
+{% block title %}{% trans "Delete Account" %}{% endblock %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+
+<div class="user-action-container flex">
+
+  <div class="side-cover">
+      <div class="side-image"></div>
+  </div>
+
+  <div class="user-info flex flex-col flex-center">
+
+      <div class="user-info-text text-center">
+          <h1 class="text-lg p-4">{% trans "Delete your account?" %}</h1>
+          <p>{% trans "Dear" %} <strong>{{ user.username }}</strong>, {% trans " are you sure you want to compleatly delete your account?" %}</p>
+          
+      </div>
+
+      <div class="delete-account-buttons flex flex-row">
+        <button class="btn btn-block card-btn">
+            <a href="{% url 'dashboard' %}" title="">{% trans "Go Back" %}</a>
+          </button>
+          <button class="btn btn-block card-btn">
+            <a href="{% url 'delete_account' %}" title="">{% trans "Delete Account" %}</a>
+          </button>
+      </div>
+
+  </div>  
+  
+</div>
+
+{% endblock content %}

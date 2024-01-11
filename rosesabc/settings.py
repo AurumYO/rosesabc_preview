@@ -189,8 +189,10 @@ ACCOUNT_SESSION_REMEMBER = True
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "account.authentication.EmailAuthBackend",
-    "social_core.backends.google.GoogleOAuth2",  # uncomment on production
+    "social_core.backends.google.GoogleOAuth2",  # uthentification with Google
+    "social_core.backends.facebook.FacebookOAuth2",  # authentification with Facebook
 ]
+
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env(
     "MY_SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"
@@ -198,6 +200,17 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env(
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env(
     "MY_SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"
 )  # Google Consumer Secret
+
+# Authentication with Facebook
+SOCIAL_AUTH_FACEBOOK_KEY = env(
+    "MY_SOCIAL_AUTH_FACEBOOK_KEY"
+) 
+SOCIAL_AUTH_FACEBOOK_SECRET = env(
+    "MY_SOCIAL_AUTH_FACEBOOK_SECRET"
+) 
+SOCIAL_AUTH_FACEBOOK_SCOPE = [env(
+    "MY_SOCIAL_AUTH_FACEBOOK_SCOPE"
+)]
 
 
 # Email backend settings

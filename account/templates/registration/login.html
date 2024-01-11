@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Log In" %}{% endblock %}
+
+{% block additional_head %}
+    <meta name="robots" content="noindex, nofollow" />
+{% endblock %}
+
+{% block content %}
+
+<div class="container-login flex flex-col flex-center text-center">
+
+    <h1>{% trans "Log In" %}</h1>
+    {% if form.errors %}
+      <p>
+        {% trans "Your username and password didn't match" %}.
+        {% trans "Please try again" %}.
+      </p>
+    {% endif %}
+
+    <div class="login-box ">
+
+      <div class="user-icon">
+        <i class="fa-solid fa-user"></i>
+      </div>
+
+      <form class="login" action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group flex flex-col">
+          {{ form.non_field_errors }}
+        </div>
+        <div class="form-group flex flex-col">
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <strong class="text-center">{{ error|escape }}</strong>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group flex flex-col">
+            <label for="{{ form.username.id_for_label }}">{% trans "Username" %}</label>
+            <p class="form-control">{{ form.username }}</p>
+            <p class="form-control">{{ form.username.errors }}</p>
+        </div>
+        <div class="form-group flex flex-col">
+            <label for="{{ form.password.id_for_label }}">{% trans "Passwrod" %}</label>
+            <p class="form-control">{{ form.password }}</p>
+            <p class="form-control">{{ form.password.errors }}</p>
+        </div>
+        <div class="form-group flex flex-col">
+          <label class="label-remember" for="remember-me">
+            <input type="checkbox" class="agree-terms-and-services" name="remember-me" class="remember-me">
+            {% trans "Remember me" %}
+          </label>
+        </div>
+        <div class="form-group flex flex-col text-center">
+          <button type="submit" class="btn">{% trans 'Log In' %}</button> 
+        </div>
+        <div class="form-group flex flex-col">
+          <p>{% trans "Not registered?" %}
+            <a href="{% url 'register' %}">{% trans "Register here" %}</a></p>
+        </div>
+        <div class="form-group flex flex-col">
+          <p><a href="{% url 'password_reset' %}">{% trans "Forgotten your password?" %}</a></p>
+        </div>
+      </form>
+
+      <div class="separator">
+        {% trans "Or login with" %}
+      </div>
+
+      <div class="social-login">
+        <ul>
+          <li class="google">
+            <a href="{% url 'social:begin' 'google-oauth2' %}">
+              <i class="fa-brands fa-google"></i>{% trans "Login with" %} Google</a>
+          </li>
+          <li class="facebook">
+            <a href="{% url 'social:begin' 'facebook' %}">
+            <i class="fa-brands fa-facebook"></i>{% trans "Login with" %} Facebook</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    
+  </div>
+
+{% endblock %}
