@@ -9,6 +9,8 @@ from unittest.mock import patch
 
 # from account.forms import UserRegistrationForm
 from library.models import Plant, Issue, ArticleCategory, Article, Contact
+from library.tests.test_views import create_plant_data, create_issue_type_data,\
+    create_article_category_data, create_article_data, create_main_article_photo
 
 # Rose model tests
 
@@ -86,7 +88,7 @@ class TestArticleCategoryModel(TestCase):
 
     def test_article_category_updated_filed(self):
         with patch.object(
-            timezone, "now", return_value=datetime(2022, 12, 12, 11, 00)
+            timezone, "now", return_value=timezone.now()
         ) as mock_now:
             category = self.create_article_category()
             category.save()
@@ -100,7 +102,7 @@ class TestArticleCategoryModel(TestCase):
 
 
 class TestArticleModel(TestCase):
-    def create_article(self):
+    def setUp(self):
         self.user = get_user_model().objects.create_user(
             username="Jill", email="jill@example.com", password="testpass123"
         )
@@ -128,7 +130,7 @@ class TestArticleModel(TestCase):
             plants_affected=self.plant,
             beneficial=False,
         )
-        article = Article.objects.create(
+        self.article = Article.objects.create(
             title="New title",
             title_description="Title with another words",
             short_description="This explains a lot",
@@ -141,29 +143,32 @@ class TestArticleModel(TestCase):
             category=self.category,
             issue_id=self.issue,
         )
-        return article
+        self.main_photo =  create_main_article_photo(self.article, self.issue)
+
 
     def test_article_creation(self):
-        article = self.create_article()
-        self.assertTrue(isinstance(article, Article))
-        self.assertEqual(article.__str__(), article.title)
-        self.assertEqual(article.title, "New title")
-        self.assertEqual(article.summary, "That's all falks!")
-        self.assertEqual(article.author.email, "jill@example.com")
+        self.assertTrue(isinstance(self.article, Article))
+        self.assertEqual(self.article.__str__(), self.article.title)
+        self.assertEqual(self.article.title, "New title")
+        self.assertEqual(self.article.summary, "That's all falks!")
+        self.assertEqual(self.article.author.email, "jill@example.com")
+     
+        # test the get_main_photo method of the Article model
+        self.assertEqual(self.article.get_main_photo(), self.main_photo) # the main photo of article1 should be photo1
 
     def test_article_slug(self):
-        article = self.create_article()
-        self.assertTrue(isinstance(article, Article))
-        self.assertEqual(article.__str__(), article.title)
-        url = article.get_absolute_url()
+        self.assertTrue(isinstance(self.article, Article))
+        self.assertEqual(self.article.__str__(), self.article.title)
+        # test article URL and get_absolute_url() method
+        url = self.article.get_absolute_url()
         self.response = self.client.get(url)
         self.assertEqual(self.response.status_code, 200)
 
     def test_article_updated_filed(self):
         with patch.object(
-            timezone, "now", return_value=datetime(2023, 1, 1, 11, 00)
+            timezone, "now", return_value=timezone.now()
         ) as mock_now:
-            article = self.create_article()
+            article = self.article
             article.save()
             self.assertEquals(article.title, "New title")
             self.assertEquals(article.body_2, "Priblem description")
@@ -171,6 +176,24 @@ class TestArticleModel(TestCase):
             self.assertEquals(article.issue_id.common_name, "Mildew")
             self.assertEquals(article.slug, slugify(unidecode(article.title)))
             self.assertEquals(article.updated, timezone.now())
+
+
+class TestArticlePhoto(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="Jill", email="jill@example.com", password="testpass123"
+        )
+        plant = create_plant_data(1, self.user)[0]
+        issue = create_issue_type_data(1, self.user, plant)[0]
+        issue_obj = Issue.objects.get(id=issue.id)
+        article_category=create_article_category_data(1, self.user)[0]
+        article_category_obj = ArticleCategory.objects.get(id=article_category.id)
+        article = create_article_data(1, self.user, issue, article_category_obj)[0]
+        self.article = Article.objects.get(id=article.id)
+        self.photo = create_main_article_photo(self.article, issue)
+
+    def test_photo_creatin(self):
+        self.assertEqual(self.photo.__str__(), f"Photo {self.photo.id} for Article '{self.article}'")
 
 
 class ContactModelTest(TestCase):
